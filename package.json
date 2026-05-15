@@ -1,19 +1,22 @@
 {
-  "name": "task-2",
+  "name": "validation-x-command-center",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "JARVIS V7 Tactical Intelligence Command Center",
+  "main": "server.js",
+  "engines": {
+    "node": "18.x"
+  },
   "scripts": {
     "start": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
-  "author": "",
+  "author": "Krishna Manohar",
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
-    "ejs": "^5.0.2",
-    "express": "^5.2.1",
+    "ejs": "^3.1.10",
+    "express": "^4.21.2",
     "nodemailer": "^8.0.7"
   }
 }
