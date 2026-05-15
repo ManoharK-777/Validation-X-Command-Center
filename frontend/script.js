@@ -6,6 +6,8 @@
 const API_BASE = 'https://validation-x-command-center.onrender.com';
 
 document.addEventListener('DOMContentLoaded', () => {
+    // Pre-warm Render server on page load (eliminates cold start wait)
+    fetch(`${API_BASE}/`, { method: 'GET' }).catch(() => {});
     const cursorCrosshair = document.getElementById('cursorCrosshair');
     const cursorDot = document.getElementById('cursorDot');
     const mainPanel = document.getElementById('mainPanel');
