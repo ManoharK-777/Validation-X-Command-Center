@@ -75,9 +75,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            submitBtn.textContent = 'UPLOADING...';
+            submitBtn.textContent = 'CONNECTING...';
             submitBtn.disabled = true;
             submitBtn.style.opacity = '0.7';
+
+            // Animated loading states (Render cold start can take ~30s)
+            const loadingStates = ['CONNECTING...', 'WAKING SERVER...', 'ENCRYPTING DATA...', 'UPLOADING PAYLOAD...', 'DISPATCHING EMAIL...'];
+            let stateIdx = 0;
+            const loadingInterval = setInterval(() => {
+                stateIdx = (stateIdx + 1) % loadingStates.length;
+                submitBtn.textContent = loadingStates[stateIdx];
+            }, 5000);
 
             try {
                 const response = await fetch(`${API_BASE}/validate`, {
@@ -86,12 +94,15 @@ document.addEventListener('DOMContentLoaded', () => {
                     body: JSON.stringify({ fullname, email, password, phone, message })
                 });
 
+                clearInterval(loadingInterval);
                 const data = await response.json();
 
                 if (data.success) {
-                    // Store mission data for success page
+                    submitBtn.textContent = 'MISSION ACCEPTED';
+                    submitBtn.style.background = '#fff';
+                    submitBtn.style.color = '#000';
                     sessionStorage.setItem('missionData', JSON.stringify({ fullname: data.fullname, message: data.message }));
-                    window.location.href = '/success.html';
+                    setTimeout(() => { window.location.href = '/success.html'; }, 800);
                 } else {
                     if (errorMsg) {
                         errorMsg.textContent = `> ERROR: ${data.error}`;
@@ -102,8 +113,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     submitBtn.style.opacity = '1';
                 }
             } catch (err) {
+                clearInterval(loadingInterval);
                 if (errorMsg) {
-                    errorMsg.textContent = '> ERROR: Connection to Render API failed. Try again.';
+                    errorMsg.textContent = '> ERROR: Server is waking up. Please try again in 30 seconds.';
                     errorMsg.style.display = 'block';
                 }
                 submitBtn.textContent = 'Initiate Deployment';
