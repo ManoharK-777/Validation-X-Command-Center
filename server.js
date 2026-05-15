@@ -94,12 +94,10 @@ app.post('/validate', async (req, res) => {
         </div>`
     };
 
-    try {
-        await transporter.sendMail(mailOptions);
-        console.log(`📧 Email dispatched for Agent: ${fullname}`);
-    } catch (err) {
-        console.error('Email dispatch failed:', err.message);
-    }
+    // Send tactical email asynchronously (don't block the response)
+    transporter.sendMail(mailOptions)
+        .then(() => console.log(`📧 Email dispatched for Agent: ${fullname}`))
+        .catch((err) => console.error('Email dispatch failed:', err.message));
 
     res.json({
         success: true,
